@@ -1,0 +1,32 @@
+<div class="plan-slot week-slot--{{ slot.status }}" id="week-slot-{{ slot.id }}">
+  <span class="plan-slot__label">{{ slot.slot_label }}</span>
+
+  {% if slot.recipe_id and recipe_by_id.get(slot.recipe_id) %}
+    <span class="plan-slot__recipe">{{ recipe_by_id[slot.recipe_id].name }}</span>
+    <div class="plan-slot__actions">
+      {% if slot.status == 'eaten' %}
+        <span class="item-row__badge item-row__badge--cooked">✓ Comido</span>
+      {% elif slot.status == 'skipped' %}
+        <span class="item-row__badge week-slot__badge--skipped">→ Saltado</span>
+        <button class="btn btn--sm"
+                hx-post="/week/slots/{{ slot.id }}/reset"
+                hx-target="#week-slot-{{ slot.id }}"
+                hx-swap="outerHTML"
+                title="Restablecer">↩</button>
+      {% else %}
+        <button class="btn btn--sm btn--success"
+                hx-post="/week/slots/{{ slot.id }}/eat"
+                hx-target="#week-slot-{{ slot.id }}"
+                hx-swap="outerHTML">✓ Comido</button>
+        <button class="btn btn--sm"
+                hx-post="/week/slots/{{ slot.id }}/skip"
+                hx-target="#week-slot-{{ slot.id }}"
+                hx-swap="outerHTML">→ Saltar</button>
+      {% endif %}
+    </div>
+  {% elif slot.recipe_id %}
+    <span class="plan-slot__recipe plan-slot__recipe--empty">Receta eliminada</span>
+  {% else %}
+    <span class="plan-slot__recipe plan-slot__recipe--empty">—</span>
+  {% endif %}
+</div>

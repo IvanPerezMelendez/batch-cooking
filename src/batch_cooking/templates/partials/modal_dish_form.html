@@ -1,0 +1,21 @@
+{% from "partials/modal_macros.html" import modal_shell, modal_footer %}
+{% call modal_shell("Añadir plato cocinado") %}
+<form class="add-form"
+      hx-post="/inventory/dish"
+      hx-target="#dish-list"
+      hx-swap="afterbegin">
+  <div class="add-form__row">
+    <input class="input" type="text" name="recipe_name_snapshot" placeholder="Nombre del plato" required autofocus>
+    <input class="input input--sm" type="number" name="servings_remaining" placeholder="Raciones" min="1" required>
+  </div>
+  <div class="add-form__row">
+    <select class="input" name="location" required>
+      <option value="">Ubicación…</option>
+      <option value="fridge">🌡️ Nevera</option>
+      <option value="freezer">❄️ Congelador</option>
+    </select>
+    <input class="input" type="date" name="expiry_date" title="Fecha de caducidad" required>
+  </div>
+  {{ modal_footer() }}
+</form>
+{% endcall %}

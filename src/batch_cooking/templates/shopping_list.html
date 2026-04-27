@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de la compra · Batch Cooking{% endblock %}
+
+{% block content %}
+<div class="page">
+  <h1 class="page__title">Lista de la compra</h1>
+
+  <section class="section">
+    <div class="section__toolbar">
+      <button class="btn btn--primary"
+              hx-get="/shopping-list/modal"
+              hx-target="#modal"
+              hx-swap="innerHTML">
+        + Añadir
+      </button>
+    </div>
+
+    <ul class="item-list" id="shopping-list">
+      {% for item in items %}
+        {% include "partials/shopping_item_row.html" %}
+      {% endfor %}
+      {% if not items %}
+        <li class="item-list__empty">La lista está vacía.</li>
+      {% endif %}
+    </ul>
+  </section>
+
+</div>
+{% endblock %}

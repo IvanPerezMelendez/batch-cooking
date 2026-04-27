@@ -1,0 +1,27 @@
+<div class="plan-slot" id="slot-{{ slot.id }}">
+  <span class="plan-slot__label">{{ slot.slot_label }}</span>
+  {% if slot.recipe_id and recipe_by_id.get(slot.recipe_id) %}
+  <span class="plan-slot__recipe">{{ recipe_by_id[slot.recipe_id].name }}</span>
+  {% else %}
+  <span class="plan-slot__recipe plan-slot__recipe--empty">—</span>
+  {% endif %}
+  {% if plan.status == 'draft' %}
+  <div class="plan-slot__actions">
+    <button class="btn btn--sm"
+            hx-get="/planner/slots/{{ slot.id }}/assign-modal"
+            hx-target="#modal"
+            hx-swap="innerHTML">
+      {% if slot.recipe_id %}Cambiar{% else %}Asignar{% endif %}
+    </button>
+    {% if slot.recipe_id %}
+    <button class="btn btn--sm btn--danger"
+            hx-delete="/planner/slots/{{ slot.id }}/recipe"
+            hx-target="#slot-{{ slot.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="¿Quitar la receta de este hueco?">
+      ✕
+    </button>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>

@@ -1,0 +1,25 @@
+{% from "partials/modal_macros.html" import modal_shell, modal_footer %}
+{% call modal_shell("Cocinar: " + recipe.name) %}
+<form class="add-form"
+      hx-post="/cooking/{{ plan_id }}/{{ recipe.id }}/cook"
+      hx-target="#cook-{{ plan_id }}-{{ recipe.id }}"
+      hx-swap="outerHTML">
+  <div class="add-form__row">
+    <label class="form-label" style="flex:1;">
+      <span>Raciones obtenidas</span>
+      <input class="input" type="number" name="servings_obtained"
+             value="{{ recipe.servings_produced }}" min="1" required>
+    </label>
+  </div>
+  <div class="add-form__row">
+    <label class="form-label" style="flex:1;">
+      <span>Destino</span>
+      <select class="input" name="location">
+        <option value="fridge">🧊 Nevera ({{ recipe.days_fridge }} días)</option>
+        <option value="freezer">❄️ Congelador ({{ recipe.days_freezer }} días)</option>
+      </select>
+    </label>
+  </div>
+  {{ modal_footer("✓ Confirmar cocción") }}
+</form>
+{% endcall %}

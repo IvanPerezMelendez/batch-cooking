@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Inventario · Batch Cooking{% endblock %}
+
+{% block content %}
+<div class="page">
+  <h1 class="page__title">Inventario</h1>
+
+  <div class="tabs">
+    <a href="/inventory" class="tab {% if active_tab == 'food' %}tab--active{% endif %}">Alimentos</a>
+    <a href="/inventory/dishes" class="tab {% if active_tab == 'dishes' %}tab--active{% endif %}">Platos</a>
+  </div>
+
+  {% if active_tab == 'food' %}
+  <section class="section">
+    <div class="section__toolbar">
+      <button class="btn btn--primary"
+              hx-get="/inventory/modal/food"
+              hx-target="#modal"
+              hx-swap="innerHTML">
+        + Añadir alimento
+      </button>
+    </div>
+
+    <ul class="item-list" id="food-list">
+      {% for item in food_items %}
+        {% include "partials/food_item_row.html" %}
+      {% endfor %}
+      {% if not food_items %}
+        <li class="item-list__empty">No hay alimentos en el inventario.</li>
+      {% endif %}
+    </ul>
+  </section>
+
+  {% elif active_tab == 'dishes' %}
+  <section class="section">
+    <div class="section__toolbar">
+      <p class="section__hint">Los platos se muestran ordenados por caducidad.</p>
+      <button class="btn btn--primary"
+              hx-get="/inventory/modal/dish"
+              hx-target="#modal"
+              hx-swap="innerHTML">
+        + Añadir plato
+      </button>
+    </div>
+
+    <ul class="item-list" id="dish-list">
+      {% for item in dish_items %}
+        {% include "partials/dish_item_row.html" %}
+      {% endfor %}
+      {% if not dish_items %}
+        <li class="item-list__empty">No hay platos cocinados en el inventario.</li>
+      {% endif %}
+    </ul>
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}

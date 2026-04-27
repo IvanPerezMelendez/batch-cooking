@@ -1,0 +1,30 @@
+{% from "partials/modal_macros.html" import modal_shell, modal_footer %}
+{% call modal_shell("Añadir alimento") %}
+<form class="add-form"
+      hx-post="/inventory/food"
+      hx-target="#food-list"
+      hx-swap="afterbegin">
+  <div class="add-form__row">
+    <input class="input" type="text" name="name" placeholder="Nombre del alimento" required autofocus>
+    <input class="input input--sm" type="number" name="quantity" placeholder="Cant." step="0.01" min="0" required>
+    <input class="input input--sm" type="text" name="unit" placeholder="ud / g / ml">
+  </div>
+  <div class="add-form__row">
+    <div class="autocomplete" style="flex:1; min-width:150px;">
+      <input class="input" style="width:100%;" type="text" name="category"
+             placeholder="Categoría (lácteos, verdura…)"
+             autocomplete="off"
+             hx-get="/inventory/autocomplete/categories"
+             hx-trigger="keyup changed delay:250ms"
+             hx-target="next .autocomplete__dropdown"
+             hx-swap="innerHTML"
+             hx-sync="this:replace"
+             hx-params="none"
+             hx-vals='js:{"q": this.value}'>
+      <ul class="autocomplete__dropdown"></ul>
+    </div>
+    <input class="input" type="date" name="expiry_date" title="Fecha de caducidad (opcional)">
+  </div>
+  {{ modal_footer() }}
+</form>
+{% endcall %}

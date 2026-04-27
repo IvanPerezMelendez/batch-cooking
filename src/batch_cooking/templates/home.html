@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio · Batch Cooking{% endblock %}
+
+{% block content %}
+<h1 class="page__title">Batch Cooking</h1>
+
+<div class="home-grid">
+  <a href="/week" class="home-card">
+    <span class="home-card__icon">📅</span>
+    <span class="home-card__label">Semana</span>
+    <span class="home-card__hint">Ver y marcar comidas del día</span>
+  </a>
+  <a href="/shopping-list" class="home-card">
+    <span class="home-card__icon">🛒</span>
+    <span class="home-card__label">Lista de la compra</span>
+    <span class="home-card__hint">Checklist para el súper</span>
+  </a>
+  <a href="/planner" class="home-card">
+    <span class="home-card__icon">📋</span>
+    <span class="home-card__label">Planificar</span>
+    <span class="home-card__hint">Asignar recetas a la semana</span>
+  </a>
+  <a href="/cooking" class="home-card">
+    <span class="home-card__icon">🍳</span>
+    <span class="home-card__label">Cocinar</span>
+    <span class="home-card__hint">Registrar batch cooking</span>
+  </a>
+  <a href="/inventory" class="home-card">
+    <span class="home-card__icon">📦</span>
+    <span class="home-card__label">Inventario</span>
+    <span class="home-card__hint">Alimentos y platos cocinados</span>
+  </a>
+  <a href="/recipes" class="home-card">
+    <span class="home-card__icon">📖</span>
+    <span class="home-card__label">Recetas</span>
+    <span class="home-card__hint">Biblioteca de recetas</span>
+  </a>
+</div>
+
+{% if expired %}
+<div class="section" style="margin-top: 1.5rem; border-color: var(--expired-border);">
+  <p class="section__title" style="color: var(--danger); margin-bottom: 0.75rem">
+    ⚠ Alimentos caducados ({{ expired | length }})
+  </p>
+  <ul class="item-list">
+    {% for item in expired %}
+    <li class="item-row item-row--expired">
+      <span class="item-row__name">{{ item.name }}</span>
+      {% if item.quantity %}
+      <span class="item-row__qty">{{ item.quantity | int if item.quantity == item.quantity | int else item.quantity }} {{ item.unit or '' }}</span>
+      {% endif %}
+      <span class="item-row__expiry">Caducó {{ item.expiry_date.strftime('%d/%m/%Y') }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  <p style="margin-top: 0.75rem">
+    <a href="/inventory" class="alert__link" style="font-size: 0.88rem;">Gestionar inventario →</a>
+  </p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+<li class="item-row {% if item.expiry_date and item.expiry_date < today %}item-row--expired{% endif %}">
+  <span class="item-row__name">{{ item.name }}</span>
+  <span class="item-row__qty">{{ item.quantity }}{% if item.unit %} {{ item.unit }}{% endif %}</span>
+  {% if item.category %}
+    <span class="item-row__tag">{{ item.category }}</span>
+  {% endif %}
+  {% if item.expiry_date %}
+    <span class="item-row__expiry">Cad: {{ item.expiry_date.strftime('%d/%m/%Y') }}</span>
+  {% endif %}
+  <div class="item-row__actions">
+    <button class="btn btn--sm"
+            hx-get="/inventory/food/{{ item.id }}/edit"
+            hx-target="closest li"
+            hx-swap="outerHTML">Editar</button>
+    <button class="btn btn--sm btn--danger"
+            hx-delete="/inventory/food/{{ item.id }}"
+            hx-target="closest li"
+            hx-swap="outerHTML"
+            hx-confirm="¿Eliminar {{ item.name }}?">Eliminar</button>
+  </div>
+</li>

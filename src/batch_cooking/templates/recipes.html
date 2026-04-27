@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Recetas · Batch Cooking{% endblock %}
+
+{% block content %}
+<div class="page">
+  <h1 class="page__title">Recetas</h1>
+
+  <section class="section">
+    <div class="section__toolbar">
+      <button class="btn btn--primary"
+              hx-get="/recipes/modal/new"
+              hx-target="#modal"
+              hx-swap="innerHTML">
+        + Nueva receta
+      </button>
+    </div>
+
+    <ul class="item-list" id="recipe-list">
+      {% for ctx in recipe_contexts %}
+        {% with recipe=ctx.recipe, ingredients=ctx.ingredients, tags=ctx.tags %}
+          {% include "partials/recipe_row.html" %}
+        {% endwith %}
+      {% endfor %}
+      {% if not recipe_contexts %}
+        <li class="item-list__empty">No hay recetas todavía. ¡Añade la primera!</li>
+      {% endif %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

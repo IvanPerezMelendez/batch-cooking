@@ -1,0 +1,19 @@
+<li class="item-row {% if cooked is defined and cooked %}item-row--cooked{% endif %}" id="cook-{{ plan_id }}-{{ recipe.id }}">
+  <span class="item-row__name">{{ recipe.name }}</span>
+  <span class="item-row__qty">{{ recipe.servings_produced }} raciones</span>
+  <span class="item-row__tag">{{ recipe.days_fridge }}d nevera · {{ recipe.days_freezer }}d congelador</span>
+  {% if cooked is defined and cooked %}
+  <span class="item-row__badge item-row__badge--cooked">
+    ✓ Cocinado ({{ servings_obtained }} raciones · {{ location.value if location.value else location }})
+  </span>
+  {% else %}
+  <div class="item-row__actions">
+    <button class="btn btn--sm btn--success"
+            hx-get="/cooking/{{ plan_id }}/{{ recipe.id }}/cook-modal"
+            hx-target="#modal"
+            hx-swap="innerHTML">
+      Cocinar
+    </button>
+  </div>
+  {% endif %}
+</li>

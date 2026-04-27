@@ -1,0 +1,11 @@
+<li class="item-row item-row--bought" id="sl-item-{{ item.id }}">
+  <span class="item-row__badge item-row__badge--bought">✓</span>
+  <span class="item-row__name">{{ item.name }}</span>
+  <span class="item-row__qty" style="color: var(--text-muted); font-style: italic;">Añadido al inventario</span>
+  <div class="item-row__actions">
+    <button class="btn btn--sm btn--danger"
+            hx-delete="/shopping-list/{{ item.id }}"
+            hx-target="#sl-item-{{ item.id }}"
+            hx-swap="outerHTML">Eliminar</button>
+  </div>
+</li>

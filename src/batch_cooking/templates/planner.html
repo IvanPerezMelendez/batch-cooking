@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Planificar · Batch Cooking{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page__header">
+    <h1 class="page__title">Planificar · Semana {{ plan.week_start.strftime('%d/%m') }}</h1>
+    {% if plan.status == 'confirmed' %}
+    <span class="badge badge--confirmed">Confirmado</span>
+    {% else %}
+    <span class="badge badge--draft">Borrador</span>
+    {% endif %}
+  </div>
+
+  {% if plan.status == 'confirmed' %}
+  <div class="alert alert--info">
+    Plan confirmado. Los ingredientes ya están en la lista de la compra.
+    <a href="/shopping-list" class="alert__link">Ver lista →</a>
+  </div>
+  {% endif %}
+
+  {% if not recipes %}
+  <div class="alert alert--warn">
+    No hay recetas en la biblioteca. <a href="/recipes" class="alert__link">Añade recetas primero →</a>
+  </div>
+  {% endif %}
+
+  <div class="plan-grid">
+    {% for day in days %}
+    <div class="plan-day">
+      <div class="plan-day__header">
+        <span class="plan-day__name">{{ day.label }}</span>
+        <span class="plan-day__date">{{ day.date.strftime('%d/%m') }}</span>
+      </div>
+      {% for slot in day.slots %}
+        {% include "partials/planner_slot.html" %}
+      {% endfor %}
+      {% if not day.slots %}
+      <div class="plan-slot plan-slot--empty">Sin huecos configurados</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if plan.status == 'draft' %}
+  <div class="plan-actions">
+    <button class="btn btn--primary"
+            hx-post="/planner/{{ plan.id }}/confirm"
+            hx-disabled-elt="this">
+      ✓ Confirmar y añadir a la lista de la compra
+    </button>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

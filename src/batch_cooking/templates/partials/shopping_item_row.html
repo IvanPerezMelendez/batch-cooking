@@ -1,0 +1,26 @@
+<li class="item-row" id="sl-item-{{ item.id }}">
+  <span class="item-row__badge {% if item.item_type.value == 'dish' %}item-row__badge--freezer{% else %}item-row__badge--fridge{% endif %}">
+    {% if item.item_type.value == 'dish' %}🍱{% else %}🥦{% endif %}
+  </span>
+  <span class="item-row__name">{{ item.name }}</span>
+  {% if item.quantity %}
+    <span class="item-row__qty">{{ item.quantity | int if item.quantity == item.quantity | int else item.quantity }} {{ item.unit or '' }}</span>
+  {% endif %}
+  {% if item.category %}
+    <span class="item-row__tag">{{ item.category }}</span>
+  {% endif %}
+  {% if item.supermarket %}
+    <span class="item-row__tag sl-supermarket">🏪 {{ item.supermarket }}</span>
+  {% endif %}
+  <div class="item-row__actions">
+    <button class="btn btn--sm btn--success"
+            hx-get="/shopping-list/{{ item.id }}/bought-form"
+            hx-target="#sl-item-{{ item.id }}"
+            hx-swap="outerHTML">Comprado</button>
+    <button class="btn btn--sm btn--danger"
+            hx-delete="/shopping-list/{{ item.id }}"
+            hx-target="#sl-item-{{ item.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="¿Eliminar este artículo?">Eliminar</button>
+  </div>
+</li>

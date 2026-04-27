@@ -1,0 +1,26 @@
+{% from "partials/modal_macros.html" import modal_shell %}
+{% call modal_shell("Asignar receta") %}
+<div class="recipe-picker">
+  {% if recipes %}
+  <ul class="recipe-pick-list">
+    {% for recipe in recipes %}
+    <li>
+      <form hx-patch="/planner/slots/{{ slot_id }}"
+            hx-target="#slot-{{ slot_id }}"
+            hx-swap="outerHTML">
+        <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+        <button type="submit" class="recipe-pick-btn">
+          <span class="recipe-pick-btn__name">{{ recipe.name }}</span>
+          <span class="recipe-pick-btn__meta">{{ recipe.servings_produced }} raciones · {{ recipe.days_fridge }}d nevera</span>
+        </button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="recipe-picker__empty">
+    No hay recetas. <a href="/recipes">Añade una primero →</a>
+  </p>
+  {% endif %}
+</div>
+{% endcall %}

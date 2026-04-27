@@ -1,0 +1,26 @@
+{#
+  modal_shell(title)
+    Envuelve el contenido del modal con el wrapper y título.
+    Uso:
+      {% call modal_shell("Mi título") %}
+        <form ...>...</form>
+      {% endcall %}
+#}
+{% macro modal_shell(title) %}
+<div class="modal">
+  <p class="modal__title">{{ title }}</p>
+  {{ caller() }}
+</div>
+{% endmacro %}
+
+{#
+  modal_footer(submit_label)
+    Pie del modal con botón Cancelar y botón de submit.
+    Debe usarse dentro de un <form>.
+#}
+{% macro modal_footer(submit_label="+ Añadir") %}
+<div class="modal__footer">
+  <button type="button" class="btn" onclick="document.getElementById('modal').close()">Cancelar</button>
+  <button class="btn btn--primary" type="submit">{{ submit_label }}</button>
+</div>
+{% endmacro %}

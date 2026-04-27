@@ -1,0 +1,23 @@
+<li class="item-row item-row--editing" id="sl-item-{{ item.id }}">
+  <div class="edit-form">
+    <div class="edit-form__row" style="align-items: center; gap: 0.5rem;">
+      <span class="item-row__name">{{ item.name }}</span>
+      <span class="item-row__tag">
+        {% if item.item_type.value == 'dish' %}🍱 Plato{% else %}🥦 Alimento{% endif %}
+      </span>
+    </div>
+    <form class="edit-form__row"
+          hx-post="/shopping-list/{{ item.id }}/bought"
+          hx-target="#sl-item-{{ item.id }}"
+          hx-swap="outerHTML">
+      <input class="input" type="date" name="expiry_date"
+             title="Fecha de caducidad{% if item.item_type.value == 'dish' %} (obligatoria para platos){% else %} (opcional){% endif %}"
+             {% if item.item_type.value == 'dish' %}required{% endif %}>
+      <button class="btn btn--primary btn--sm" type="submit">✓ Confirmar</button>
+      <button class="btn btn--sm" type="button"
+              hx-get="/shopping-list/{{ item.id }}/row"
+              hx-target="#sl-item-{{ item.id }}"
+              hx-swap="outerHTML">Cancelar</button>
+    </form>
+  </div>
+</li>

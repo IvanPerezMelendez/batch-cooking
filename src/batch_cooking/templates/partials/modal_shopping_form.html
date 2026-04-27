@@ -1,0 +1,48 @@
+{% from "partials/modal_macros.html" import modal_shell, modal_footer %}
+{% call modal_shell("Añadir a la lista") %}
+<form class="add-form"
+      hx-post="/shopping-list"
+      hx-target="#shopping-list"
+      hx-swap="afterbegin">
+  <div class="add-form__row">
+    <input class="input" type="text" name="name" placeholder="Nombre del producto" required autofocus>
+    <select class="input input--sm" name="item_type">
+      <option value="food" selected>🥦 Alimento</option>
+      <option value="dish">🍱 Plato</option>
+    </select>
+  </div>
+  <div class="add-form__row">
+    <input class="input input--sm" type="number" name="quantity" placeholder="Cant." step="0.01" min="0">
+    <input class="input input--sm" type="text" name="unit" placeholder="ud / g / ml">
+    <div class="autocomplete" style="flex:1; min-width:120px;">
+      <input class="input" style="width:100%;" type="text" name="category"
+             placeholder="Categoría"
+             autocomplete="off"
+             hx-get="/shopping-list/autocomplete/categories"
+             hx-trigger="keyup changed delay:250ms"
+             hx-target="next .autocomplete__dropdown"
+             hx-swap="innerHTML"
+             hx-sync="this:replace"
+             hx-params="none"
+             hx-vals='js:{"q": this.value}'>
+      <ul class="autocomplete__dropdown"></ul>
+    </div>
+  </div>
+  <div class="add-form__row">
+    <div class="autocomplete" style="flex:1;">
+      <input class="input" style="width:100%;" type="text" name="supermarket"
+             placeholder="Supermercado (Mercadona, Aldi…)"
+             autocomplete="off"
+             hx-get="/shopping-list/autocomplete/supermarkets"
+             hx-trigger="keyup changed delay:250ms"
+             hx-target="next .autocomplete__dropdown"
+             hx-swap="innerHTML"
+             hx-sync="this:replace"
+             hx-params="none"
+             hx-vals='js:{"q": this.value}'>
+      <ul class="autocomplete__dropdown"></ul>
+    </div>
+  </div>
+  {{ modal_footer() }}
+</form>
+{% endcall %}

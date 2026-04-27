@@ -1,0 +1,79 @@
+{% from "partials/modal_macros.html" import modal_shell, modal_footer %}
+{% set is_edit = recipe is not none %}
+{% call modal_shell("Editar receta" if is_edit else "Nueva receta") %}
+<form class="add-form"
+      {% if is_edit %}
+      hx-put="/recipes/{{ recipe.id }}"
+      hx-target="#recipe-{{ recipe.id }}"
+      hx-swap="outerHTML"
+      {% else %}
+      hx-post="/recipes"
+      hx-target="#recipe-list"
+      hx-swap="afterbegin"
+      {% endif %}>
+
+  <div class="add-form__row">
+    <input class="input" name="name" type="text" placeholder="Nombre de la receta" required autofocus
+           value="{{ recipe.name if is_edit else '' }}">
+  </div>
+
+  <div class="add-form__row">
+    <label class="form-label" style="flex:1">
+      Raciones
+      <input class="input" name="servings_produced" type="number" min="1" required
+             value="{{ recipe.servings_produced if is_edit else 4 }}">
+    </label>
+    <label class="form-label" style="flex:1">
+      Días nevera
+      <input class="input" name="days_fridge" type="number" min="0" required
+             value="{{ recipe.days_fridge if is_edit else 4 }}">
+    </label>
+    <label class="form-label" style="flex:1">
+      Días congelador
+      <input class="input" name="days_freezer" type="number" min="0" required
+             value="{{ recipe.days_freezer if is_edit else 90 }}">
+    </label>
+  </div>
+
+  <div class="form-section">
+    <p class="form-section__title">Ingredientes</p>
+    <div id="ingredient-rows">
+      {% if ingredients %}
+        {% for ri, ing in ingredients %}
+        <div class="ingredient-row add-form__row">
+          <input class="input" name="ingredient_names" type="text" placeholder="Ingrediente"
+                 autocomplete="off" value="{{ ing.name }}">
+          <input class="input input--sm" name="ingredient_quantities" type="number"
+                 step="0.01" min="0" placeholder="Cant." value="{{ ri.quantity }}">
+          <input class="input input--sm" name="ingredient_units" placeholder="ud/g/ml"
+                 value="{{ ri.unit }}">
+          <button type="button" class="btn btn--sm btn--danger" onclick="removeIngRow(this)">✕</button>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="ingredient-row add-form__row">
+          <input class="input" name="ingredient_names" type="text" placeholder="Ingrediente" autocomplete="off">
+          <input class="input input--sm" name="ingredient_quantities" type="number" step="0.01" min="0" placeholder="Cant.">
+          <input class="input input--sm" name="ingredient_units" placeholder="ud/g/ml">
+          <button type="button" class="btn btn--sm btn--danger" onclick="removeIngRow(this)">✕</button>
+        </div>
+      {% endif %}
+    </div>
+    <button type="button" class="btn btn--sm" style="margin-top:0.25rem"
+            onclick="addIngRow()">+ Ingrediente</button>
+  </div>
+
+  <div class="add-form__row">
+    <textarea class="input" name="notes" placeholder="Notas (pasos, consejos…)" rows="2"
+              style="resize:vertical;font-family:inherit">{{ recipe.notes or '' if is_edit else '' }}</textarea>
+  </div>
+
+  <div class="add-form__row">
+    <input class="input" name="tag_names" type="text"
+           placeholder="Tags separados por coma: pollo, fácil, batch…"
+           value="{{ tags | map(attribute='name') | join(', ') if tags else '' }}">
+  </div>
+
+  {{ modal_footer("Guardar receta") }}
+</form>
+{% endcall %}

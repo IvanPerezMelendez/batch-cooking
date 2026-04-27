@@ -1,0 +1,38 @@
+<li class="item-row item-row--recipe" id="recipe-{{ recipe.id }}">
+  <div class="recipe-row__header">
+    <span class="item-row__name">{{ recipe.name }}</span>
+    <div class="recipe-row__meta">
+      <span class="item-row__tag">{{ recipe.servings_produced }} raciones</span>
+      <span class="item-row__tag">🧊 {{ recipe.days_fridge }}d</span>
+      <span class="item-row__tag">❄️ {{ recipe.days_freezer }}d</span>
+      {% for tag in tags %}
+      <span class="item-row__tag recipe-tag">{{ tag.name }}</span>
+      {% endfor %}
+    </div>
+    <div class="item-row__actions">
+      <button class="btn btn--sm"
+              hx-get="/recipes/{{ recipe.id }}/modal/edit"
+              hx-target="#modal"
+              hx-swap="innerHTML">Editar</button>
+      <button class="btn btn--sm btn--danger"
+              hx-delete="/recipes/{{ recipe.id }}"
+              hx-target="#recipe-{{ recipe.id }}"
+              hx-swap="outerHTML"
+              hx-confirm="¿Eliminar '{{ recipe.name }}'?">Eliminar</button>
+    </div>
+  </div>
+
+  {% if recipe.notes %}
+  <p class="recipe-row__notes">{{ recipe.notes }}</p>
+  {% endif %}
+
+  {% if ingredients %}
+  <ul class="recipe-row__ingredients">
+    {% for ri, ing in ingredients %}
+    <li>{{ ing.name }}{% if ri.quantity %} · {{ ri.quantity | int if ri.quantity == ri.quantity | int else ri.quantity }} {{ ri.unit }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="recipe-row__no-ingredients">Sin ingredientes definidos</p>
+  {% endif %}
+</li>

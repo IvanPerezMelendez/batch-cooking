@@ -1,0 +1,17 @@
+<li class="item-row {% if item.expiry_date and item.expiry_date < today %}item-row--expired{% endif %}">
+  <span class="item-row__name">{{ item.recipe_name_snapshot }}</span>
+  <span class="item-row__badge item-row__badge--{{ item.location.value }}">
+    {{ '❄️' if item.location.value == 'freezer' else '🌡️' }} {{ item.location.value }}
+  </span>
+  <span class="item-row__qty">{{ item.servings_remaining }} rac.</span>
+  {% if item.expiry_date %}
+    <span class="item-row__expiry">Cad: {{ item.expiry_date.strftime('%d/%m/%Y') }}</span>
+  {% endif %}
+  <div class="item-row__actions">
+    <button class="btn btn--sm btn--danger"
+            hx-delete="/inventory/dish/{{ item.id }}"
+            hx-target="closest li"
+            hx-swap="outerHTML"
+            hx-confirm="¿Eliminar este lote?">Eliminar</button>
+  </div>
+</li>

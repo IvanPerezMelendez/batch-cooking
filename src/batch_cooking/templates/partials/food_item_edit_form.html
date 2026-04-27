@@ -1,0 +1,22 @@
+<li class="item-row item-row--editing">
+  <form class="edit-form"
+        hx-patch="/inventory/food/{{ item.id }}"
+        hx-target="closest li"
+        hx-swap="outerHTML">
+    <div class="edit-form__row">
+      <input class="input" type="text" name="name" value="{{ item.name }}" required placeholder="Nombre">
+      <input class="input input--sm" type="number" name="quantity" value="{{ item.quantity }}" step="0.01" min="0" required placeholder="Cant.">
+      <input class="input input--sm" type="text" name="unit" value="{{ item.unit or '' }}" placeholder="ud/g/ml">
+    </div>
+    <div class="edit-form__row">
+      <input class="input" type="text" name="category" value="{{ item.category or '' }}" placeholder="Categoría">
+      <input class="input" type="date" name="expiry_date" value="{{ item.expiry_date or '' }}">
+      <button class="btn btn--primary btn--sm" type="submit">Guardar</button>
+      <button class="btn btn--sm"
+              type="button"
+              hx-get="/inventory/food/{{ item.id }}"
+              hx-target="closest li"
+              hx-swap="outerHTML">Cancelar</button>
+    </div>
+  </form>
+</li>

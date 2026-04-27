@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Semana · Batch Cooking{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page__header">
+    <h1 class="page__title">Semana {{ plan.week_start.strftime('%d/%m') }} – {{ week_end.strftime('%d/%m') }}</h1>
+    {% if plan.status == 'confirmed' %}
+    <span class="badge badge--confirmed">Confirmado</span>
+    {% elif plan.status == 'cooked' %}
+    <span class="badge badge--confirmed">Cocinado</span>
+    {% else %}
+    <span class="badge badge--draft">Borrador</span>
+    {% endif %}
+  </div>
+
+  {% if plan.status == 'draft' %}
+  <div class="alert alert--warn">
+    Plan en borrador. <a href="/planner" class="alert__link">Planifica la semana →</a>
+  </div>
+  {% endif %}
+
+  <div class="plan-grid">
+    {% for day in days %}
+    <div class="plan-day{% if day.date == today %} plan-day--today{% endif %}">
+      <div class="plan-day__header">
+        <span>{{ day.label }}</span>
+        <span class="plan-day__date">{{ day.date.strftime('%d/%m') }}</span>
+      </div>
+      {% for slot in day.slots %}
+        {% include "partials/week_slot.html" %}
+      {% endfor %}
+      {% if not day.slots %}
+      <div class="plan-slot plan-slot--empty">Sin huecos</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if skipped %}
+  <div class="section" style="margin-top: 1.25rem">
+    <p class="section__title" style="margin-bottom: 0.75rem">Pool disponible</p>
+    <p class="section__hint" style="margin-bottom: 0.75rem">Comidas saltadas que siguen en el inventario</p>
+    <ul class="item-list">
+      {% for slot in skipped %}
+      <li class="item-row">
+        <span class="item-row__name">{{ recipe_by_id[slot.recipe_id].name if slot.recipe_id in recipe_by_id else '—' }}</span>
+        <span class="item-row__tag">{{ slot.slot_label }}</span>
+        <span class="item-row__tag">{{ slot.date.strftime('%a %d/%m') }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Batch Cooking{% endblock %}</title>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="/home" class="nav__link">Inicio</a>
+    <a href="/week" class="nav__link">Semana</a>
+    <a href="/shopping-list" class="nav__link">Lista</a>
+    <a href="/planner" class="nav__link">Planificar</a>
+    <a href="/cooking" class="nav__link">Cocinar</a>
+    <a href="/inventory" class="nav__link">Inventario</a>
+    <a href="/recipes" class="nav__link">Recetas</a>
+  </nav>
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+  <dialog id="modal" onclick="if(event.target===this)this.close()"></dialog>
+  <script>
+    // Abrir el modal cuando HTMX carga su contenido
+    document.body.addEventListener('htmx:afterSwap', function(e) {
+      if (e.detail.target.id === 'modal') document.getElementById('modal').showModal();
+    });
+    // Cerrar el modal tras un submit exitoso (no en GETs de autocomplete)
+    document.body.addEventListener('htmx:afterRequest', function(e) {
+      if (e.detail.successful &&
+          e.detail.requestConfig.verb !== 'get' &&
+          e.detail.elt.closest('#modal')) {
+        document.getElementById('modal').close();
+      }
+    });
+    // Cerrar dropdowns de autocomplete al hacer click fuera
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.autocomplete')) {
+        document.querySelectorAll('.autocomplete__dropdown').forEach(function(d) { d.innerHTML = ''; });
+      }
+    });
+    // Ingredientes dinámicos en el formulario de recetas
+    function addIngRow() {
+      var rows = document.getElementById('ingredient-rows');
+      if (!rows) return;
+      var first = rows.querySelector('.ingredient-row');
+      var clone = first.cloneNode(true);
+      clone.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+      rows.appendChild(clone);
+      clone.querySelector('input').focus();
+    }
+    function removeIngRow(btn) {
+      var rows = document.getElementById('ingredient-rows');
+      if (!rows) return;
+      if (rows.children.length > 1) {
+        btn.closest('.ingredient-row').remove();
+      } else {
+        btn.closest('.ingredient-row').querySelectorAll('input').forEach(function(i) { i.value = ''; });
+      }
+    }
+  </script>
+</body>
+</html>

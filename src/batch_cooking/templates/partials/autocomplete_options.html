@@ -1,0 +1,8 @@
+{% for opt in options %}
+<li class="autocomplete__option"
+    onmousedown="event.preventDefault();
+                 this.closest('.autocomplete').querySelector('input').value='{{ opt }}';
+                 this.closest('.autocomplete__dropdown').innerHTML='';">
+  {{ opt }}
+</li>
+{% endfor %}
