@@ -1,8 +1,10 @@
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from .config import settings
 from .routers.cooking.router import router as cooking_router
 from .routers.home.router import router as home_router
 from .routers.inventory.router import router as inventory_router
@@ -12,6 +14,9 @@ from .routers.shopping_list.router import router as shopping_list_router
 from .routers.week.router import router as week_router
 
 app = FastAPI(title="Batch Cooking")
+
+if not settings.is_local:
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["batchcooking.ivanperezmelendez.com"])
 
 app.mount(
     "/static",
