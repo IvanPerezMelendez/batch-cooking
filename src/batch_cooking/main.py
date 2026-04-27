@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -23,6 +24,10 @@ app.mount(
     StaticFiles(directory=Path(__file__).parent.parent.parent / "static"),
     name="static",
 )
+
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/home")
 
 app.include_router(home_router)
 app.include_router(inventory_router)
