@@ -1,6 +1,6 @@
+import datetime
 import enum
 import uuid
-from datetime import datetime
 
 from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
@@ -29,8 +29,6 @@ class ShoppingListItem(UUIDMixin, Base):
     unit: Mapped[str | None] = mapped_column(nullable=True)
     category: Mapped[str | None] = mapped_column(nullable=True)
     supermarket: Mapped[str | None] = mapped_column(nullable=True)
-    source_plan_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("plan.id"), nullable=True
-    )
+    source_date: Mapped[datetime.date | None] = mapped_column(nullable=True)
     is_purchased: Mapped[bool] = mapped_column(nullable=False, default=False)
-    added_at: Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow)
+    added_at: Mapped[datetime.datetime] = mapped_column(nullable=False, default=datetime.datetime.utcnow)

@@ -5,20 +5,24 @@
 {% block content %}
 <div class="page">
   <div class="page__header">
-    <h1 class="page__title">Planificar · Semana {{ plan.week_start.strftime('%d/%m') }}</h1>
-    {% if plan.status == 'confirmed' %}
-    <span class="badge badge--confirmed">Confirmado</span>
-    {% else %}
-    <span class="badge badge--draft">Borrador</span>
-    {% endif %}
+    <h1 class="page__title">
+      Planificar · {{ start_date.strftime('%d/%m') }} – {{ end_date.strftime('%d/%m') }}
+    </h1>
   </div>
 
-  {% if plan.status == 'confirmed' %}
-  <div class="alert alert--info">
-    Plan confirmado. Los ingredientes ya están en la lista de la compra.
-    <a href="/shopping-list" class="alert__link">Ver lista →</a>
+  <!-- Selector de ventana de días -->
+  <div class="planner-window">
+    <span class="planner-window__label">Ver:</span>
+    {% for w in [7, 14, 21] %}
+    <a href="/planner?window={{ w }}"
+       class="btn btn--sm{% if window == w %} btn--primary{% endif %}">{{ w }} días</a>
+    {% endfor %}
+    <form method="get" action="/planner" class="planner-window__custom">
+      <input type="number" name="window" value="{{ window }}"
+             min="1" max="90" class="planner-window__input">
+      <button type="submit" class="btn btn--sm">Custom</button>
+    </form>
   </div>
-  {% endif %}
 
   {% if not recipes %}
   <div class="alert alert--warn">
@@ -28,29 +32,19 @@
 
   <div class="plan-grid">
     {% for day in days %}
-    <div class="plan-day">
-      <div class="plan-day__header">
-        <span class="plan-day__name">{{ day.label }}</span>
-        <span class="plan-day__date">{{ day.date.strftime('%d/%m') }}</span>
-      </div>
-      {% for slot in day.slots %}
-        {% include "partials/planner_slot.html" %}
-      {% endfor %}
-      {% if not day.slots %}
-      <div class="plan-slot plan-slot--empty">Sin huecos configurados</div>
-      {% endif %}
-    </div>
+      {% include "partials/planner_day.html" %}
     {% endfor %}
   </div>
 
-  {% if plan.status == 'draft' %}
   <div class="plan-actions">
-    <button class="btn btn--primary"
-            hx-post="/planner/{{ plan.id }}/confirm"
-            hx-disabled-elt="this">
-      ✓ Confirmar y añadir a la lista de la compra
-    </button>
+    <form hx-post="/planner/add-to-shopping"
+          hx-disabled-elt="button[type=submit]">
+      <input type="hidden" name="start" value="{{ start_date.isoformat() }}">
+      <input type="hidden" name="end" value="{{ end_date.isoformat() }}">
+      <button type="submit" class="btn btn--primary">
+        🛒 Añadir a la lista de la compra
+      </button>
+    </form>
   </div>
-  {% endif %}
 </div>
 {% endblock %}

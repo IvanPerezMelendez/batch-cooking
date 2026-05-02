@@ -175,6 +175,8 @@ body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--t
   padding: 0.4rem 0.75rem; font-size: 0.85rem; font-weight: 600;
 }
 .plan-day__date { font-weight: 400; opacity: 0.85; }
+.plan-day__clear { margin-left: auto; background: rgba(255,255,255,0.15); border: none; color: #fff; padding: 0.1rem 0.4rem; font-size: 0.8rem; line-height: 1.4; }
+.plan-day__clear:hover { background: rgba(255,255,255,0.35); color: #fff; }
 .plan-slot {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
   padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); font-size: 0.9rem;
@@ -187,6 +189,10 @@ body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--t
 
 /* Plan actions bar */
 .plan-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+.plan-actions--plans { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+.plan-actions__row { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.plan-actions__week { font-size: 0.88rem; font-weight: 600; min-width: 110px; }
+.plan-actions__row .btn--danger { margin-left: auto; }
 
 /* Recipe picker (modal) */
 .recipe-pick-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; max-height: 350px; overflow-y: auto; }
@@ -227,8 +233,18 @@ body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--t
 .home-card__label { font-weight: 700; font-size: 0.95rem; }
 .home-card__hint { font-size: 0.78rem; color: var(--text-muted); }
 
+/* Planner window selector */
+.planner-window { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.planner-window__label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+.planner-window__custom { display: flex; align-items: center; gap: 0.35rem; }
+.planner-window__input { width: 56px; padding: 0.28rem 0.5rem; font-size: 0.82rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); }
+.planner-window__input:focus { outline: none; border-color: var(--primary); }
+
 /* Week – slot states */
+.plan-day--today { border-color: var(--primary); }
 .plan-day--today .plan-day__header { background: var(--primary-hover); }
+.plan-day__now { font-size: 0.7rem; background: rgba(255,255,255,0.28); padding: 0.1rem 0.35rem; border-radius: 999px; margin-left: 0.3rem; font-weight: 500; }
+.plan-day--past { opacity: 0.6; }
 .week-slot--eaten { opacity: 0.6; }
 .week-slot--skipped { background: #fffdf0; }
 .week-slot__badge--skipped { background: #fff3cd; color: #856404; font-size: 0.78rem; padding: 0.15rem 0.5rem; border-radius: 999px; }

@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from sqlalchemy import func, select
@@ -28,9 +29,26 @@ class ShoppingListRepository(BaseRepository[ShoppingListItem]):
         )
         return list(result.scalars().all())
 
-    async def get_by_plan(self, plan_id: uuid.UUID) -> list[ShoppingListItem]:
+    async def get_unpurchased_by_ingredient(
+        self, ingredient_id: uuid.UUID, unit: str | None
+    ) -> list[ShoppingListItem]:
+        stmt = (
+            select(ShoppingListItem)
+            .where(
+                ShoppingListItem.ingredient_id == ingredient_id,
+                ShoppingListItem.is_purchased == False,  # noqa: E712
+                ShoppingListItem.quantity.is_not(None),
+            )
+            .order_by(ShoppingListItem.added_at)
+        )
+        if unit is not None:
+            stmt = stmt.where(ShoppingListItem.unit == unit)
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())
+
+    async def get_by_source_date(self, date: datetime.date) -> list[ShoppingListItem]:
         result = await self.db.execute(
-            select(ShoppingListItem).where(ShoppingListItem.source_plan_id == plan_id)
+            select(ShoppingListItem).where(ShoppingListItem.source_date == date)
         )
         return list(result.scalars().all())
 

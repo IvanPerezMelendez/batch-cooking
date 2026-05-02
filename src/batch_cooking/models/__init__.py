@@ -3,7 +3,6 @@ from .dish_inventory import DishInventory
 from .food_inventory import FoodInventory
 from .ingredient import Ingredient
 from .meal_slot import MealSlot
-from .plan import Plan
 from .recipe import Recipe
 from .recipe_ingredient import RecipeIngredient
 from .recipe_tag import RecipeTag
@@ -18,7 +17,6 @@ __all__ = [
     "FoodInventory",
     "Ingredient",
     "MealSlot",
-    "Plan",
     "Recipe",
     "RecipeIngredient",
     "RecipeTag",

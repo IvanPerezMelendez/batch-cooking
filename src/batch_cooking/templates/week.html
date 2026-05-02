@@ -5,21 +5,8 @@
 {% block content %}
 <div class="page">
   <div class="page__header">
-    <h1 class="page__title">Semana {{ plan.week_start.strftime('%d/%m') }} – {{ week_end.strftime('%d/%m') }}</h1>
-    {% if plan.status == 'confirmed' %}
-    <span class="badge badge--confirmed">Confirmado</span>
-    {% elif plan.status == 'cooked' %}
-    <span class="badge badge--confirmed">Cocinado</span>
-    {% else %}
-    <span class="badge badge--draft">Borrador</span>
-    {% endif %}
+    <h1 class="page__title">Esta semana · {{ today.strftime('%d/%m') }} – {{ week_end.strftime('%d/%m') }}</h1>
   </div>
-
-  {% if plan.status == 'draft' %}
-  <div class="alert alert--warn">
-    Plan en borrador. <a href="/planner" class="alert__link">Planifica la semana →</a>
-  </div>
-  {% endif %}
 
   <div class="plan-grid">
     {% for day in days %}

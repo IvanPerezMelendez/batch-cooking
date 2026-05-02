@@ -18,7 +18,6 @@ class MealSlotStatus(str, enum.Enum):
 class MealSlot(UUIDMixin, Base):
     __tablename__ = "meal_slot"
 
-    plan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("plan.id"), nullable=False)
     date: Mapped[datetime.date] = mapped_column(nullable=False)
     slot_label: Mapped[str] = mapped_column(nullable=False)
     recipe_id: Mapped[uuid.UUID | None] = mapped_column(
