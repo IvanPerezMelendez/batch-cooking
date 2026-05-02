@@ -12,23 +12,31 @@ class MealSlotRepository(BaseRepository[MealSlot]):
     def __init__(self, db: AsyncSession) -> None:
         super().__init__(MealSlot, db)
 
-    async def get_by_plan(self, plan_id: uuid.UUID) -> list[MealSlot]:
+    async def get_by_date(self, date: datetime.date) -> list[MealSlot]:
         result = await self.db.execute(
             select(MealSlot)
-            .where(MealSlot.plan_id == plan_id)
+            .where(MealSlot.date == date)
+            .order_by(MealSlot.slot_label)
+        )
+        return list(result.scalars().all())
+
+    async def get_by_date_range(
+        self, start: datetime.date, end: datetime.date
+    ) -> list[MealSlot]:
+        result = await self.db.execute(
+            select(MealSlot)
+            .where(MealSlot.date >= start, MealSlot.date <= end)
             .order_by(MealSlot.date, MealSlot.slot_label)
         )
         return list(result.scalars().all())
 
-    async def get_by_date(self, date: datetime.date) -> list[MealSlot]:
-        result = await self.db.execute(select(MealSlot).where(MealSlot.date == date))
-        return list(result.scalars().all())
-
-    async def get_skipped_with_recipe(self, plan_id: uuid.UUID) -> list[MealSlot]:
-        """Pool disponible: slots con receta asignada que no se comieron."""
+    async def get_skipped_with_recipe(
+        self, start: datetime.date, end: datetime.date
+    ) -> list[MealSlot]:
         result = await self.db.execute(
             select(MealSlot).where(
-                MealSlot.plan_id == plan_id,
+                MealSlot.date >= start,
+                MealSlot.date <= end,
                 MealSlot.status == MealSlotStatus.skipped,
                 MealSlot.recipe_id.is_not(None),
             )

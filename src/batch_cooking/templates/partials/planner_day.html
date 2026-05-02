@@ -1,0 +1,21 @@
+<div class="plan-day{% if day.is_today %} plan-day--today{% elif day.is_past %} plan-day--past{% endif %}"
+     id="day-{{ day.date.isoformat() }}">
+  <div class="plan-day__header">
+    <span class="plan-day__name">
+      {{ day.label }}{% if day.is_today %} <span class="plan-day__now">Hoy</span>{% endif %}
+    </span>
+    <span class="plan-day__date">{{ day.date.strftime('%d/%m') }}</span>
+    <button class="btn btn--sm plan-day__clear"
+            hx-delete="/planner/day/{{ day.date.isoformat() }}"
+            hx-target="#day-{{ day.date.isoformat() }}"
+            hx-swap="outerHTML"
+            hx-confirm="¿Limpiar recetas del {{ day.label }} {{ day.date.strftime('%d/%m') }}?"
+            title="Limpiar día">✕</button>
+  </div>
+  {% for slot in day.slots %}
+    {% include "partials/planner_slot.html" %}
+  {% endfor %}
+  {% if not day.slots %}
+  <div class="plan-slot plan-slot--empty">Sin huecos configurados</div>
+  {% endif %}
+</div>

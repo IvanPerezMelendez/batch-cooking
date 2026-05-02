@@ -1,8 +1,8 @@
 {% from "partials/modal_macros.html" import modal_shell, modal_footer %}
 {% call modal_shell("Cocinar: " + recipe.name) %}
 <form class="add-form"
-      hx-post="/cooking/{{ plan_id }}/{{ recipe.id }}/cook"
-      hx-target="#cook-{{ plan_id }}-{{ recipe.id }}"
+      hx-post="/cooking/{{ recipe.id }}/cook"
+      hx-target="#cook-{{ recipe.id }}"
       hx-swap="outerHTML">
   <div class="add-form__row">
     <label class="form-label" style="flex:1;">
