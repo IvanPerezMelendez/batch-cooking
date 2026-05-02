@@ -45,12 +45,16 @@ class FoodInventoryRepository(BaseRepository[FoodInventory]):
             select(FoodInventory)
             .where(FoodInventory.ingredient_id == ingredient_id)
             .order_by(FoodInventory.expiry_date.asc().nulls_last())
-            .limit(1)
         )
-        item = result.scalar_one_or_none()
-        if item is None:
-            return
-        item.quantity -= quantity
-        if item.quantity <= 0:
-            await self.db.delete(item)
+        items = list(result.scalars().all())
+        remaining = quantity
+        for item in items:
+            if remaining <= 0:
+                break
+            if item.quantity <= remaining:
+                remaining -= item.quantity
+                await self.db.delete(item)
+            else:
+                item.quantity -= remaining
+                remaining = 0
         await self.db.flush()
